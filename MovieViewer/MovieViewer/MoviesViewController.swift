@@ -8,48 +8,65 @@
 
 import UIKit
 import AFNetworking
+import EZLoadingActivity
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
     @IBOutlet weak var tableView: UITableView!
     var movies: [NSDictionary]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        //creation of refresh control to allow pull down refresh
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "refreshControlAction:", forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
+
+    }
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(true)
+        loadData()
+    }
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func loadData(){
+        
         tableView.dataSource = self
         tableView.delegate = self
-        // Do any additional setup after loading the view.
         
-        //using movies database to pull json data of most popular films
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
-        let request = NSURLRequest(URL: url!)
-        let session = NSURLSession(
+        let url = NSURL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        EZLoadingActivity.show("Loading...", disableUI:true)
+
+        let request = NSURLRequest(
+            URL: url!,cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData,
+                                    timeoutInterval: 10)
+
+            let session = NSURLSession(
             configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-            delegate:nil,
-            delegateQueue:NSOperationQueue.mainQueue()
+            delegate: nil,
+            delegateQueue: NSOperationQueue.mainQueue()
         )
-        
-        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
+
+        let task: NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
-                if let data = dataOrNil {
-                    if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
-                        data, options:[]) as? NSDictionary {
-                            NSLog("response: \(responseDictionary)")
-                            
-                            self.movies = responseDictionary["results"] as? [NSDictionary]
-                            //reload to fill out tables
-                            self.tableView.reloadData()
-                        
+            if let data = dataOrNil {
+                if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
+                    data, options:[]) as? NSDictionary {
+        
+                    self.movies = responseDictionary["results"] as? [NSDictionary]
+                    //reload to fill out tables
+                        self.tableView.reloadData()
+        
+                        EZLoadingActivity.hide(success: true, animated: false)
+
                     }
                 }
         });
         task.resume()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         //return same number of rows as movies given by movies database
         //if movies does not exist return 0
@@ -60,6 +77,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
     }
+    
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         
         //cells inside a table this allows the app not to load all cells at once, when a cell dissapears a new one is loaded
@@ -76,10 +95,48 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         cell.titleLable.text = title
         cell.overviewLable.text = overview
         cell.posterView.setImageWithURL(imageUrl!)
+        /*Debugging to see JSON DATA
         print("row \(indexPath.row)")
+        */
         return cell
     }
     
+    
+    func refreshControlAction(refreshcontrol:UIRefreshControl){
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
+        let url = NSURL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        
+        let request = NSURLRequest(
+            URL: url!,cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData,
+            timeoutInterval: 10)
+        
+        let session = NSURLSession(
+            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+            delegate: nil,
+            delegateQueue: NSOperationQueue.mainQueue()
+        )
+        
+        let task: NSURLSessionDataTask = session.dataTaskWithRequest(request,
+            completionHandler: { (dataOrNil, response, error) in
+                if let data = dataOrNil {
+                    if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
+                        data, options:[]) as? NSDictionary {
+                            
+                            self.movies = responseDictionary["results"] as? [NSDictionary]
+                            //reload to fill out tables
+                            self.tableView.reloadData()
+                            refreshcontrol.endRefreshing()
+                            
+                    }
+                }
+        });
+        task.resume()
+    }
+
     /*
     // MARK: - Navigation
 
