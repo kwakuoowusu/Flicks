@@ -9,22 +9,27 @@
 import UIKit
 import AFNetworking
 import EZLoadingActivity
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
+class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate{
     @IBOutlet weak var tableView: UITableView!
     var movies: [NSDictionary]?
 
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var errorImage: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         self.errorLabel.hidden = true
         self.errorImage.hidden = true
         //creation of refresh control to allow pull down refresh
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "refreshControlAction:", forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
+        
 
     }
+    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         loadData()
@@ -61,20 +66,23 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
                     self.movies = responseDictionary["results"] as? [NSDictionary]
                     //reload to fill out tables
-                        self.tableView.reloadData()
-        
                         EZLoadingActivity.hide(success: true, animated: false)
                         self.errorLabel.hidden = true
                         self.errorImage.hidden = true
+                        self.tableView.reloadData()
+
                     }
-                } else{
+                } else {
+                
                 EZLoadingActivity.hide(success: false, animated: false)
-                    print ("fail")
                 self.errorLabel.hidden = false
                 self.errorImage.hidden = false
                 }
+
         });
+
         task.resume()
+
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
@@ -91,7 +99,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         
-        //cells inside a table this allows the app not to load all cells at once, when a cell dissapears a new one is loaded
+
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell",forIndexPath: indexPath) as! MovieCell
         
         let movie = movies![indexPath.row]
@@ -108,6 +116,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         
         cell.titleLable.text = title
+
         cell.overviewLable.text = overview
         /*Debugging to see JSON DATA
         print("row \(indexPath.row)")
@@ -115,8 +124,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         return cell
     }
     
-    
-    func refreshControlAction(refreshcontrol:UIRefreshControl){
+        func refreshControlAction(refreshcontrol:UIRefreshControl){
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -134,6 +142,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             delegateQueue: NSOperationQueue.mainQueue()
         )
         
+        //network request
         let task: NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
                 if let data = dataOrNil {
@@ -157,6 +166,9 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         task.resume()
     }
 
+
+}
+
     /*
     // MARK: - Navigation
 
@@ -167,4 +179,4 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     */
 
-}
+
