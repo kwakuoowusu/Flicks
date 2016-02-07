@@ -108,10 +108,20 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         if let posterPath = movie["poster_path"] as? String {
             let posterBaseUrl = "http://image.tmdb.org/t/p/w500"
             let posterUrl = NSURL(string: posterBaseUrl + posterPath)
-            cell.posterView.setImageWithURL(posterUrl!)
+            
+            cell.posterView.alpha = 0.0
+            
+            //make posters fade in as they are loaded
+            UIView.animateWithDuration(0.7){
+                cell.posterView.setImageWithURL(posterUrl!)
+                cell.posterView.alpha = 1.0
+
+            }
+            
+            
         } else {
             // No poster image. Can either set to nil (no image) or a default movie poster image
-            cell.posterView.image = nil
+            
         }
         
         

@@ -10,6 +10,7 @@
 		8C02F2A61C61A452007E87AC /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C02F2A51C61A452007E87AC /* AFNetworking.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8C0BA47B1C66C8C3005DFB1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C0BA47A1C66C8C3005DFB1E /* Assets.xcassets */; };
 		8C0BA47D1C66C91C005DFB1E /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0BA47C1C66C91C005DFB1E /* error.png */; };
+		8C0BA47F1C67F057005DFB1E /* placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0BA47E1C67F057005DFB1E /* placeholder.png */; };
 		8C7A94721C48459F00E72F35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7A94711C48459F00E72F35 /* AppDelegate.swift */; };
 		8C7A94771C48459F00E72F35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C7A94751C48459F00E72F35 /* Main.storyboard */; };
 		8C7A947C1C48459F00E72F35 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C7A947A1C48459F00E72F35 /* LaunchScreen.storyboard */; };
@@ -23,6 +24,7 @@
 		8C02F2A51C61A452007E87AC /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AFNetworking.framework; path = "Pods/../build/Debug-iphoneos/AFNetworking.framework"; sourceTree = "<group>"; };
 		8C0BA47A1C66C8C3005DFB1E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8C0BA47C1C66C91C005DFB1E /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = error.png; path = Assets.xcassets/error.png; sourceTree = "<group>"; };
+		8C0BA47E1C67F057005DFB1E /* placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = placeholder.png; path = Assets.xcassets/placeholder.png; sourceTree = "<group>"; };
 		8C7A946E1C48459F00E72F35 /* MovieViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C7A94711C48459F00E72F35 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8C7A94761C48459F00E72F35 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 				8CFACDB71C4AE8D700A56D27 /* Views */,
 				8C7A94711C48459F00E72F35 /* AppDelegate.swift */,
 				8C7A94751C48459F00E72F35 /* Main.storyboard */,
+				8C0BA47E1C67F057005DFB1E /* placeholder.png */,
 				8C0BA47A1C66C8C3005DFB1E /* Assets.xcassets */,
 				8C0BA47C1C66C91C005DFB1E /* error.png */,
 				8C7A947A1C48459F00E72F35 /* LaunchScreen.storyboard */,
@@ -179,6 +182,7 @@
 				8C7A947C1C48459F00E72F35 /* LaunchScreen.storyboard in Resources */,
 				8C7A94771C48459F00E72F35 /* Main.storyboard in Resources */,
 				8C0BA47D1C66C91C005DFB1E /* error.png in Resources */,
+				8C0BA47F1C67F057005DFB1E /* placeholder.png in Resources */,
 				8C0BA47B1C66C8C3005DFB1E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
