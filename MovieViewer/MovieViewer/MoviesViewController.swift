@@ -13,8 +13,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var tableView: UITableView!
     var movies: [NSDictionary]?
 
+    @IBOutlet weak var errorLabel: UILabel!
+    @IBOutlet weak var errorImage: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.errorLabel.hidden = true
+        self.errorImage.hidden = true
         //creation of refresh control to allow pull down refresh
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "refreshControlAction:", forControlEvents: UIControlEvents.ValueChanged)
@@ -60,8 +64,14 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                         self.tableView.reloadData()
         
                         EZLoadingActivity.hide(success: true, animated: false)
-
+                        self.errorLabel.hidden = true
+                        self.errorImage.hidden = true
                     }
+                } else{
+                EZLoadingActivity.hide(success: false, animated: false)
+                    print ("fail")
+                self.errorLabel.hidden = false
+                self.errorImage.hidden = false
                 }
         });
         task.resume()
@@ -87,14 +97,18 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let movie = movies![indexPath.row]
         let title = movie["title"] as! String
         let overview = movie["overview"] as! String
-        let posterPath = movie["poster_path"]as! String
-        let baseUrl  = "http://image.tmdb.org/t/p/w500/"
+        if let posterPath = movie["poster_path"] as? String {
+            let posterBaseUrl = "http://image.tmdb.org/t/p/w500"
+            let posterUrl = NSURL(string: posterBaseUrl + posterPath)
+            cell.posterView.setImageWithURL(posterUrl!)
+        } else {
+            // No poster image. Can either set to nil (no image) or a default movie poster image
+            cell.posterView.image = nil
+        }
         
-        let imageUrl = NSURL(string: baseUrl + posterPath)
         
         cell.titleLable.text = title
         cell.overviewLable.text = overview
-        cell.posterView.setImageWithURL(imageUrl!)
         /*Debugging to see JSON DATA
         print("row \(indexPath.row)")
         */
@@ -130,9 +144,15 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                             //reload to fill out tables
                             self.tableView.reloadData()
                             refreshcontrol.endRefreshing()
-                            
+                            self.errorLabel.hidden = true
+                            self.errorImage.hidden = true
+                    }else{
+                        print("error")
                     }
                 }
+                
+                
+            
         });
         task.resume()
     }
