@@ -238,6 +238,20 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         filteredData = movies
         tableView.reloadData()
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+       
+        let cell = sender as! UITableViewCell
+        let indexPath = tableView.indexPathForCell(cell)
+        
+        let movie = filteredData![indexPath!.row]
+        
+        let detailViewController = segue.destinationViewController as! DetailViewController
+        
+        detailViewController.movie = movie
+        
+        
+    }
 
 
 }
