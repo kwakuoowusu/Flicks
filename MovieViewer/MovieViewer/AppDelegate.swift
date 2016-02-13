@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame:UIScreen.mainScreen().bounds)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
+        
         let nowPlayingNavigationController = storyboard.instantiateViewControllerWithIdentifier("MoviesNavigationController") as! UINavigationController
         nowPlayingNavigationController.navigationBar.barTintColor = UIColor.blackColor()
         let nowPlayingViewController = nowPlayingNavigationController.topViewController as! MoviesViewController

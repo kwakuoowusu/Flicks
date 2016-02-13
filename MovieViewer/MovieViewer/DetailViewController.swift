@@ -16,13 +16,25 @@ class DetailViewController: UIViewController {
     
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
+   
+
+    let lowResPoster = "http://image.tmdb.org/t/p/w45"
+    let highResPoster = "http://image.tmdb.org/t/p/original"
+    
+    var lowResPosterUrl: String!
+    var highResPosterUrl: String!
     var movie:NSDictionary!
     
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.size.height)
+        
+
+        
+        
         let title = movie["title"] as! String
         titleLabel.text = title
         titleLabel.sizeToFit()
@@ -31,14 +43,58 @@ class DetailViewController: UIViewController {
         let overview = movie["overview"] as! String
         overviewLabel.text = overview
         overviewLabel.sizeToFit()
+        
+        
         if let posterPath = movie["poster_path"] as? String {
             
-            let posterBaseUrl = "http://image.tmdb.org/t/p/w500"
-            let posterUrl = NSURL(string: posterBaseUrl + posterPath)
+            lowResPosterUrl = lowResPoster + posterPath
+            highResPosterUrl = highResPoster + posterPath
             
-            self.posterImageView.setImageWithURL(posterUrl!)
+            let smallImageRequest = NSURLRequest(URL: NSURL(string: self.lowResPosterUrl)!)
+            let largeImageRequest = NSURLRequest(URL: NSURL(string: self.highResPosterUrl)!)
+            
+            
+            self.posterImageView.setImageWithURLRequest(
+                smallImageRequest,
+                placeholderImage: nil,
+                success: { (smallImageRequest, smallImageResponse, smallImage) -> Void in
+                    
+                    // smallImageResponse will be nil if the smallImage is already available
+                    // in cache (might want to do something smarter in that case).
+                    self.posterImageView.alpha = 0.0
+                    self.posterImageView.image = smallImage;
+                    
+                    UIView.animateWithDuration(0.3, animations: { () -> Void in
+                        
+                        self.posterImageView.alpha = 1.0
+                        
+                        }, completion: { (sucess) -> Void in
+                            
+                            // The AFNetworking ImageView Category only allows one request to be sent at a time
+                            // per ImageView. This code must be in the completion block.
+                            self.posterImageView.setImageWithURLRequest(
+                                largeImageRequest,
+                                placeholderImage: smallImage,
+                                success: { (largeImageRequest, largeImageResponse, largeImage) -> Void in
+                                    
+                                    self.posterImageView.image = largeImage;
+                                    
+                                },
+                                failure: { (request, response, error) -> Void in
+                                    // do something for the failure condition of the large image request
+                                    // possibly setting the ImageView's image to a default image
+                            })
+                    })
+                },
+                failure: { (request, response, error) -> Void in
+                    // do something for the failure condition
+                    // possibly try to get the large image
+            })
+
+            
         }
-        // Do any additional setup after loading the view.
+
+        
     }
 
     override func didReceiveMemoryWarning() {

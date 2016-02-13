@@ -135,7 +135,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             
             cell.posterView.alpha = 0.0
             
-            //make posters fade in as they are loaded
+            //make posters fade in as they are cycled through
             UIView.animateWithDuration(0.7){
                 cell.posterView.setImageWithURL(posterUrl!)
                 cell.posterView.alpha = 1.0
@@ -152,14 +152,30 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         cell.titleLable.text = title
 
         cell.overviewLable.text = overview
+        
+        //cell.selectionStyle = .None
         /*Debugging to see JSON DATA
         print("row \(indexPath.row)")
         */
+        
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = UIColor.grayColor()
+        cell.selectedBackgroundView = backgroundView
+        
+        
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+
+        //let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell",forIndexPath: indexPath) as! MovieCell
+
+        
+        
+        
+        //tableView.reloadData()
     }
     
     func refreshControlAction(refreshcontrol:UIRefreshControl){
